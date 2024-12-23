@@ -7,7 +7,7 @@ class Employee(models.Model):
     Date_Naissance=models.DateField()
     Date_Embauche =models.DateField()
     Adresse=models.CharField
-    service=models.ForeignKey(Service,on_delete=models.CASCADE)
+    service=models.ForeignKey('Service',on_delete=models.CASCADE)
 
 class Service(models.Model):
  Description=models.CharField(max_length=50)
@@ -26,9 +26,30 @@ class Congé(models.Model):
  Solde_Congé=models.FloatField()
 
 class Évaluation(models.Model):
- Salaire=models.DateField()
- Date_Évaluation=models.
- Score
- Objectifs_Attendus
- Objectifs_Atteints
- ID_Employé *
+     Salaire=models.DateField()
+     Date_Évaluation=models.DateField()
+     Score=models.FloatField()
+     Objectifs_Attendus=models.FloatField()
+     Objectifs_Atteints=models.FloatField()
+    
+
+class Salaire(models.Model):
+     Mois
+    Année
+    Montant_Paye
+    Retenues
+    Primes
+ 
+
+class Recrutement(models.Model):
+ concerne
+ Poste
+ Date_Publication
+ Statut
+
+
+class Candidat(models.Model):
+    Nom=models.CharField(max_length=50)
+    Prénom=models.CharField(max_length=50)
+    Email=models.EmailField()
+    cv= models.FileField(upload_to='resumes/', null=True, blank=True)
