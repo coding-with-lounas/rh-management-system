@@ -4,5 +4,6 @@ from . import views
 
 urlpatterns = [
     path('employe/',views.afficherEmploye,name='empList'),
-    path('ajouterEmploye/',views.ajouterEmploye,name='addemp')
+    path('employe/ajouterEmploye/',views.ajouterEmploye,name='addemp'),
+    path('employe/supprimerEmploye/<int:pk>/', views.supprimerEmploye, name='delemp'),
 ]

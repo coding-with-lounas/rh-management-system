@@ -19,7 +19,7 @@ class Employe(models.Model):
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f'{self.prenom}+{self.nom}'
+        return f'{self.prenom} {self.nom}'
 
 
 class Contrat(models.Model):
