@@ -58,7 +58,19 @@ def supprimerEmploye(request, pk):
 #     return render(request, 'testsuppemp.html', {'emp': employe})
 
 
-    
+def modifierEmploye(request,pk):
+    emp=Employe.objects.get(id=pk)
+    if request.method=='POST':
+        formEmp=EmployeForm(request.POST,instance=cmd)
+        if formEmp.is_valid():
+            formEmp.save()
+            return redirect("empList")
+        else:
+            return render(request, 'empEdit.html', {"form": formEmp})
+    else:
+        formEmp=EmployeForm(instance=cmd)
+        return render(request,'empEdit.html',{"form":formEmp})
+
     
 # def afficherServices(request):
 #     Services=

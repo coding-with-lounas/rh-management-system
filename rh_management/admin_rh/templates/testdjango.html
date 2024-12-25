@@ -30,7 +30,7 @@
         <td>{{ x.date_embauche }}</td>
         <td>{{ x.email }}</td>
         <td>{{ x.service }}</td>
-        {% comment %} <td><a href="{% url 'editemp' x.id %}">Modifier</a></td> {% endcomment %}
+        <td><a href="{% url 'editemp' x.id %}">Modifier</a></td>
         <td><a href="{% url 'delemp' x.id %}">Supprimer</a></td> 
     </tr>
     {% endfor %}
