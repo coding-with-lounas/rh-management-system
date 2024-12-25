@@ -2,22 +2,24 @@ from django.db import models
 
 
 class Service(models.Model):
-    description = models.CharField(max_length=50)
     nom_service = models.CharField(max_length=50)
-
+    description = models.CharField(max_length=50)
+    
     def __str__(self):
         return self.nom_service
 
 
-class Employee(models.Model):
+class Employe(models.Model):
     nom = models.CharField(max_length=50)
+    prenom = models.CharField(max_length=50) 
+    adresse=models.CharField(max_length=250)
     date_naissance = models.DateField()
+    email = models.EmailField(max_length=100)
     date_embauche = models.DateField()
-    adresse = models.CharField(max_length=255)
     service = models.ForeignKey(Service, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.nom
+        return f'{self.prenom}+{self.nom}'
 
 
 class Contrat(models.Model):

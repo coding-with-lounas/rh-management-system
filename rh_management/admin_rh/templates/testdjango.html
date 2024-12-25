@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee</title>
+</head>
+<body>
+    <h4> List Employe</h4>
+        <thead>
+            <tr>
+                <td>nom</td>
+                <td>prenom</td>
+                <td>date_naissance</td>
+                 <td>adresse</td>
+
+                <td>date_embauche</td>
+                 <td>Email</td>
+                <td>service</td>
+            </tr>
+        </thead>
+        <tbody>
+    {% for x in Employe %}
+    <tr>
+        <td>{{x.nom}}</td>
+        <td>{{x.prenom}}</td>
+        <td>{{x.date_naissance}}</td> 
+        <td>{{x.adresse}}</td> 
+        <td>{{x.email}}</td>
+        <td>{{x.date_embauche}}</td>
+        <td>{{x.service}}</td>
+        <td><input href="{% url 'addemp' %}" value='modifier'></td>
+    </tr>
+    {% endfor %}
+        </tbody>
+    </table>
+    <a type="submit" href="{% url 'addemp' %}">ajouter</a>
+    <table border='1'>
+</body>
+</html>
