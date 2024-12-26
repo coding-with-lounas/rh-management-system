@@ -12,7 +12,8 @@
  <button type='submit'>confirmer</button>
 </form> 
 <h4> Liste des employés </h4>
-{% if employe %}
+
+{% if employes %}
 <table border='1'>
     <thead>
         <tr>
@@ -26,7 +27,7 @@
         </tr>
     </thead>
     <tbody>
-    {% for x in Employe %}
+    {% for x in employes %}
     <tr>
         <td>{{ x.nom }}</td>
         <td>{{ x.prenom }}</td>

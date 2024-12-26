@@ -16,7 +16,7 @@ class Employe(models.Model):
     date_naissance = models.DateField()
     email = models.EmailField(max_length=100)
     date_embauche = models.DateField()
-    service = models.ForeignKey(Service, on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, on_delete=models.CASCADE,related_name="rel_emp")
 
     def __str__(self):
         return f'{self.prenom} {self.nom}'

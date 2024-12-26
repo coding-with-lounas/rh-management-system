@@ -1,6 +1,6 @@
 from django.db.models import fields
 from django import forms
-from .models import Employe
+from .models import Employe,Service
 
 class EmployeForm(forms.ModelForm):
     class Meta:
@@ -34,3 +34,8 @@ class EmployeForm(forms.ModelForm):
         #         'required': 'Le service est nécessaire pour cet employé.'
         #     },
         # }
+
+class ServiceForm(forms.ModelForm):
+    class Meta:
+        model = Service
+        fields = ['nom_service', 'description']

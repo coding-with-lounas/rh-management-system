@@ -6,14 +6,8 @@
     <title>Employee</title>
 </head>
 <body>
-    <!-- Template : testdjango.html -->
-<form methode='GET'> 
- <label for="search">entre que voulez rechercher</label>  
- <input type='text' name='search'>
- <button type='submit'>confirmer</button>
-</form> 
-<h4> Liste des employés </h4>
-{% if Employe %}
+ 
+    <h1>Liste des Employes</h1>
 <table border='1'>
     <thead>
         <tr>
@@ -42,9 +36,6 @@
     {% endfor %}
     </tbody>
 </table>
-{% elif message %}
-    <p>{{ message }}</p>
-{% endif %}
 <a href="{% url 'addemp' %}">Ajouter un employé</a>
 
 
