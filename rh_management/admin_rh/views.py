@@ -59,7 +59,8 @@ def supprimerEmploye(request, pk):
 
 def recherchreEmploye(request):
     if request.method == 'GET':
-        query = request.GET.get('search')
+        query = request.GET.get('search').strip()
+        # eliminer les espaces de debut et la fin de text 
         if query:
            
             employes = Employe.objects.filter(
@@ -72,13 +73,13 @@ def recherchreEmploye(request):
             )
 
             if employes.exists(): 
-                return render(request, 'search.html', {'emploe': employes})
+                return render(request, 'testsearch.html', {'employe': employes})
 
-            return render(request, 'search.html', {'message': 'Aucun employé trouvé pour cette recherche.'})
+            return render(request, 'testsearch.html', {'message': 'Aucun employé trouvé pour cette recherche.'})
         
-        return render(request, 'search.html', {'message': 'Veuillez entrer un terme de recherche.'})
+        return render(request, 'testsearch.html', {'message': 'Veuillez entrer un terme de recherche.'})
     
-    return render(request, 'search.html', {'message': 'Utilisez la méthode GET pour effectuer une recherche.'})
+    return render(request, 'testsearch.html', {'message': 'Utilisez la méthode GET pour effectuer une recherche.'})
 
 
 
