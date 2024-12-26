@@ -2,6 +2,8 @@ from django.shortcuts import render,redirect,get_object_or_404
 from .models import Employe,Service
 from .forms import EmployeForm
 from django.contrib import messages
+from django.db.models import Q
+
 
 # Create your views here.
 
@@ -42,6 +44,43 @@ def supprimerEmploye(request, pk):
     
     return render(request,'testsuppemp.html',{'emp':employe})
 
+# def supprimerEmploye(request, pk):
+#     # importe l'objet employe , ou raise a 404 error si non trouvé
+#     employe = get_object_or_404(Employe, id=pk)
+#     if request.method == 'POST':
+#         employe.delete()
+#         messages.success(request, "L'employé a été supprimé avec succès.")
+#         return redirect('empList')
+#     else:
+#         messages.error(request, "L'employé n'est pas valide pour suppression.")
+#         return redirect('empList')
+#     # si le request method est GET, allez the confirmation page
+#     return render(request, 'testsuppemp.html', {'emp': employe})
+
+def recherchreEmploye(request):
+    if request.method == 'GET':
+        query = request.GET.get('search')
+        if query:
+           
+            employes = Employe.objects.filter(
+                Q(nom__icontains=query) |
+                Q(prenom__icontains=query) |
+                Q(id__icontains=query) |
+                Q(adresse__icontains=query) |
+                Q(date_naissance__icontains=query) |
+                Q(date_embauche__icontains=query)
+            )
+
+            if employes.exists(): 
+                return render(request, 'search.html', {'emploe': employes})
+
+            return render(request, 'search.html', {'message': 'Aucun employé trouvé pour cette recherche.'})
+        
+        return render(request, 'search.html', {'message': 'Veuillez entrer un terme de recherche.'})
+    
+    return render(request, 'search.html', {'message': 'Utilisez la méthode GET pour effectuer une recherche.'})
+
+
 
 # def supprimerEmploye(request, pk):
 #     # importe l'objet employe , ou raise a 404 error si non trouvé
@@ -61,14 +100,14 @@ def supprimerEmploye(request, pk):
 def modifierEmploye(request,pk):
     emp=Employe.objects.get(id=pk)
     if request.method=='POST':
-        formEmp=EmployeForm(request.POST,instance=cmd)
+        formEmp=EmployeForm(request.POST,instance=emp)
         if formEmp.is_valid():
             formEmp.save()
             return redirect("empList")
         else:
             return render(request, 'empEdit.html', {"form": formEmp})
     else:
-        formEmp=EmployeForm(instance=cmd)
+        formEmp=EmployeForm(instance=emp)
         return render(request,'empEdit.html',{"form":formEmp})
 
     

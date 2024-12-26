@@ -7,4 +7,5 @@ urlpatterns = [
     path('employe/ajouterEmploye/',views.ajouterEmploye,name='addemp'),
     path('employe/supprimerEmploye/<int:pk>/', views.supprimerEmploye, name='delemp'),
     path('employe/modifierEmploye/<int:pk>/', views.modifierEmploye, name='editemp'),
+    path('employe/',views.recherchreEmploye,name='empList'),
 ]
