@@ -20,7 +20,10 @@ class Employe(models.Model):
 
     def __str__(self):
         return f'{self.prenom} {self.nom}'
-
+class Absence(models.Model):
+    Date_Absence=models.DateField()
+    Reason=models.CharField(max_length=500)
+    employe=models.ForeignKey(Employe, on_delete=models.CASCADE,related_name="rel_abs")
 
 class Contrat(models.Model):
     type_contrat = models.CharField(max_length=50)
