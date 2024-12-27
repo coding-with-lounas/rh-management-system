@@ -11,15 +11,27 @@ class Service(models.Model):
 
 class Employe(models.Model):
     nom = models.CharField(max_length=50)
-    prenom = models.CharField(max_length=50) 
+    prenom = models.CharField(max_length=50)
+    sexe=models.CharField(max_length=6) 
     adresse=models.CharField(max_length=250)
     date_naissance = models.DateField()
     email = models.EmailField(max_length=100)
     date_embauche = models.DateField()
+    salaire_jour = models.DecimalField(max_digits=10, decimal_places=2)
     service = models.ForeignKey(Service, on_delete=models.CASCADE,related_name="rel_emp")
 
     def __str__(self):
         return f'{self.prenom} {self.nom}'
+
+class Massrouf(models.Model):
+    employe = models.ForeignKey('Employe', on_delete=models.CASCADE)
+    prix_avance=models.DecimalField(max_digits=10, decimal_places=2)
+    date_demande = models.DateField(auto_now_add=True)
+    justification = models.TextField()
+
+    def __str__(self):
+        return f""
+    
 class Absence(models.Model):
     Date_Absence=models.DateField()
     Reason=models.CharField(max_length=500)
@@ -56,15 +68,7 @@ class Évaluation(models.Model):
         return f"Évaluation {self.date_évaluation}: Score {self.score}"
 
 
-class Salaire(models.Model):
-    mois = models.CharField(max_length=20)
-    année = models.IntegerField()
-    montant_paye = models.FloatField()
-    retenues = models.FloatField()
-    primes = models.FloatField()
 
-    def __str__(self):
-        return f"Salaire: {self.mois} {self.année}"
 
 
 class Recrutement(models.Model):
