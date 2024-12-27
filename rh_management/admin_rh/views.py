@@ -167,6 +167,7 @@ def supprimerService(request, pk):
     return render(request, 'testsuppservice.html', {'service': service})
 
 
+
 def rechercherService(request):
     if request.method == 'GET':
         query = request.GET.get('search', '').strip() 
