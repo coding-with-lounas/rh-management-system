@@ -62,18 +62,15 @@ class Congé(models.Model):
         return f"{self.type_congé} ({self.date_début} - {self.date_fin})"
 
 
-class Évaluation(models.Model):
-    salaire = models.FloatField()
-    date_évaluation = models.DateField()
-    score = models.FloatField()
-    objectifs_attendus = models.FloatField()
-    objectifs_atteints = models.FloatField()
+# class Évaluation(models.Model):
+#     salaire = models.FloatField()
+#     date_évaluation = models.DateField()
+#     score = models.FloatField()
+#     objectifs_attendus = models.FloatField()
+#     objectifs_atteints = models.FloatField()
 
-    def __str__(self):
-        return f"Évaluation {self.date_évaluation}: Score {self.score}"
-
-
-
+#     def __str__(self):
+#         return f"Évaluation {self.date_évaluation}: Score {self.score}"
 
 
 class Recrutement(models.Model):
