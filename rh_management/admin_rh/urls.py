@@ -19,7 +19,6 @@ urlpatterns = [
     path('ajouter-absence/', views.ajouterAbsence, name='ajouterAbsence'),
     path('editer-absence/<int:pk>/', views.editerAbsence, name='editerAbsence'),
     path('supprimer-absence/<int:pk>/', views.supprimerAbsence, name='supprimerAbsence'),
-
-     path('absences/', views.afficherAbsences, name='liste_absences'),
+    path('absences/', views.afficherAbsences, name='listeAbsences'),
     path('absences/rechercher/', views.rechercherAbsences, name='rechercher_absences'),
 ]

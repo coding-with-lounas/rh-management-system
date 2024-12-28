@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Employe,Service
+from .models import Employe,Service,Absence
 from .forms import EmployeForm,ServiceForm,AbsenceForm 
 from django.contrib import messages
 from django.db.models import Q,Count
@@ -10,7 +10,7 @@ from django.db.models import Q,Count
 
 def afficherEmploye(request):
     employe= Employe.objects.all()
-    return render(request,'testdjango.html',{'Employe':employe})
+    return render(request,'testdjango.html',{'Employes':employe})
 
 
 # Vue pour ajouter un employe
@@ -74,14 +74,17 @@ def rechercherEmploye(request):
                 Q(date_embauche__icontains=query)
             )
 
-            if employes.exists(): 
-                return render(request, 'testsearch.html', {'employes': employes})
+            if not employes.exists():
+                message = "Aucun employe ne correspond à votre recherche." 
+                return render(request, 'testdjango.html', {'Employes': Employe.objects.all(),'message':message,'search_mode': True})
 
-            return render(request, 'testsearch.html', {'message': 'Aucun employé trouvé pour cette recherche.'})
+            return render(request, 'testdjango.html', {'Employes':employes,'search_mode': True})
         
-        return render(request, 'testsearch.html', {'message': 'Veuillez entrer un terme de recherche.'})
+        return render(request, 'testdjango.html', {'Employes': Employe.objects.all(),'message': 'Veuillez entrer un terme de recherche.','search_mode': False})
     
-    return render(request, 'testsearch.html', {'message': 'Utilisez la méthode GET pour effectuer une recherche.'})
+    return render(request, 'testdjango.html', {'Employes': Employe.objects.all(),'message': 'Utilisez la méthode GET pour effectuer une recherche.','search_mode': False})
+
+
 
 
 
@@ -100,18 +103,21 @@ def rechercherEmploye(request):
 #     return render(request, 'testsuppemp.html', {'emp': employe})
 
 
+    
 def modifierEmploye(request,pk):
     emp=get_object_or_404(Employe, id=pk)
-    if request.method=='POST':
-        formEmp=EmployeForm(request.POST,instance=emp)
+    if request.method == 'POST':
+        formEmp = EmployeForm(request.POST, instance=emp)
         if formEmp.is_valid():
             formEmp.save()
-            return redirect("empList")
+            return redirect("empList")  # Rediriger après la sauvegard
         else:
             return render(request, 'testEdit.html', {"form": formEmp})
     else:
         formEmp=EmployeForm(instance=emp)
         return render(request,'testEdit.html',{"form":formEmp})
+
+
 
  # Vue pour afficherun service   
 def afficherService(request):
