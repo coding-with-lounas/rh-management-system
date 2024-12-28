@@ -38,9 +38,12 @@ class Massrouf(models.Model):
         return f""
     
 class Absence(models.Model):
-    Date_Absence=models.DateField()
-    Reason=models.CharField(max_length=500)
     employe=models.ForeignKey(Employe, on_delete=models.CASCADE,related_name="rel_abs")
+    date_Absence=models.DateField()
+    justification=models.CharField(max_length=500)
+    
+    def __str__(self):
+        return f"{self.employe.nom} - {self.date_Absence}"
 
 class Contrat(models.Model):
     type_contrat = models.CharField(max_length=50)

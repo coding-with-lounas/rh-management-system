@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .models import Employe,Service
-from .forms import EmployeForm,ServiceForm 
+from .forms import EmployeForm,ServiceForm,AbsenceForm 
 from django.contrib import messages
 from django.db.models import Q,Count
 
@@ -187,3 +187,75 @@ def rechercherService(request):
             return render(request, 'testservice.html', {'message': 'Veuillez entrer un terme de recherche.'})
     
     return render(request, 'testservice.html', {'message': 'Utilisez la méthode GET pour effectuer une recherche.'})
+
+
+
+# Absence
+
+def afficherAbsences(request):
+    absences = Absence.objects.all()
+    return render(request, 'liste_absences.html', {'absences': absences, 'search_mode': False})
+
+
+def ajouterAbsence(request):
+    if request.method == 'POST':
+        form = AbsenceForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "L'absence a été ajoutée avec succès.")
+            return redirect('listeAbsences')  # Redirige vers la liste des absences
+        else:
+            messages.error(request, "Erreur : Veuillez corriger les erreurs dans le formulaire.")
+    else:
+        form = AbsenceForm()
+    return render(request, 'ajouter_absence.html', {'form': form})
+
+
+def editerAbsence(request, pk):
+    absence = get_object_or_404(Absence, pk=pk)
+    if request.method == 'POST':
+        form = AbsenceForm(request.POST, instance=absence)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "L'absence a été modifiée avec succès.")
+            return redirect('listeAbsences')  # Redirige vers la liste des absences
+        else:
+            messages.error(request, "Erreur : Veuillez corriger les erreurs dans le formulaire.")
+    else:
+        form = AbsenceForm(instance=absence)
+    return render(request, 'editer_absence.html', {'form': form, 'absence': absence})
+
+
+def supprimerAbsence(request, pk):
+    absence = get_object_or_404(Absence, pk=pk)
+    if request.method == 'POST':
+        try:
+            absence.delete()
+            messages.success(request, "L'absence a été supprimée avec succès.")
+        except Exception as e:
+            messages.error(request, f"Erreur lors de la suppression : {str(e)}")
+        return redirect('listeAbsences')  # Redirige vers la liste des absences
+    return render(request, 'supprimer_absence.html', {'absence': absence})
+
+
+
+def rechercherAbsences(request):
+    query = request.GET.get('search', '')  # Récupère le terme de recherche
+    absences = Absence.objects.all()  # Récupère toutes les absences par défaut
+
+    if query:  # Si un terme de recherche est présent
+        absences = absences.filter(
+            employe__nom__icontains=query
+        ) | absences.filter(
+            employe__prenom__icontains=query
+        ) | absences.filter(
+            date_Absence__icontains=query
+        ) | absences.filter(
+            justification__icontains=query
+        )
+        if not absences.exists():  # Si aucun résultat trouvé
+            message = "Aucune absence ne correspond à votre recherche."
+            return render(request, 'liste_absences.html', {'absences': Absence.objects.all(), 'message': message, 'search_mode': True})
+    return render(request, 'liste_absences.html', {'absences': absences, 'search_mode': True})
+
+

@@ -1,6 +1,6 @@
 from django.db.models import fields
 from django import forms
-from .models import Employe,Service
+from .models import Employe,Service,Absence
 
 class EmployeForm(forms.ModelForm):
     class Meta:
@@ -39,3 +39,15 @@ class ServiceForm(forms.ModelForm):
     class Meta:
         model = Service
         fields = ['nom_service', 'description']
+        
+
+
+class AbsenceForm(forms.ModelForm):
+    class Meta:
+        model = Absence
+        fields = ['employe', 'date_Absence', 'justification']
+        labels = {
+            'employe': 'Employé',
+            'date_Absence': 'Date d\'absence',
+            'justification': 'Justification',
+        }
