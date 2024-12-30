@@ -1,3 +1,32 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from .forms import CandidatForm
+from admin_rh.models import Recrutement
 
-# Create your views here.
+# def candidat_create_view(request):
+#     if request.method == 'POST':
+#         form = CandidatForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             form.save()
+#             return redirect('candidat_success')  # Redirige après succès
+#     else:
+#         form = CandidatForm()
+#     return render(request, 'candidat_form.html', {'form': form})
+
+# def candidat_success_view(request):
+#     return render(request, 'candidat_success.html')
+
+
+def candidat_create_view(request):
+    recrutements = Recrutement.objects.all()
+    if request.method == 'POST':
+        form = CandidatForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('candidat_success')
+    else:
+        form = CandidatForm()
+    return render(request, 'candidat_form.html', {'form': form, 'recrutements': recrutements})
+
+
+def candidat_success_view(request):
+    return render(request, 'candidat_success.html')
