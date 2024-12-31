@@ -15,6 +15,7 @@ urlpatterns = [
     path('service/ajouter/', views.ajouterService, name='ajouterService'), 
     path('service/modifier/<int:pk>/', views.modifierService, name='modifierService'),  
     path('service/supprimer/<int:pk>/', views.supprimerService, name='supprimerService'),
+    path('services/recherche/', views.rechercherService, name='rechercherService'),  
     # absence
     path('ajouter-absence/', views.ajouterAbsence, name='ajouterAbsence'),
     path('editer-absence/<int:pk>/', views.editerAbsence, name='editerAbsence'),

@@ -3,83 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Services et Employés</title>
+    <title>Liste des Services</title>
+    <!-- Lien vers Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         body {
+            background-color: #f8f9fa;
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f4f4f4;
         }
-
         h1 {
+            margin-bottom: 30px;
+            color: #343a40;
             text-align: center;
-            margin-top: 30px;
-            color: #333;
+            font-size: 2.5rem;
         }
-
         table {
-            width: 80%;
-            margin: 30px auto;
-            border-collapse: collapse;
-            background-color: #fff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin: 0 auto;
+            width: 90%;
         }
-
         th, td {
-            padding: 12px;
             text-align: center;
-            border: 1px solid #ddd;
+            vertical-align: middle;
         }
-
-        th {
-            background-color: #4CAF50;
+        .table th, .table td {
+            border: 1px solid #dee2e6;
+        }
+        .table th {
+            background-color: #007bff;
             color: white;
         }
-
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
+        .table td a {
+            text-decoration: none;
+            color: #007bff;
         }
-
-        tr:hover {
-            background-color: #ddd;
+        .table td a:hover {
+            color: #0056b3;
+            text-decoration: underline;
         }
-
-        .message {
-            text-align: center;
-            font-size: 18px;
-            color: #888;
+        .btn-custom {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #218838;
         }
     </style>
 </head>
 <body>
 
     <h1>Liste des Services</h1>
-    
-    {% if services %}
-    <table>
-        <thead>
-            <tr>
-                <th>Service</th>
-                <th>Description</th>
-                <th>Nombre d'Employés</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for service in services %}
-            <tr>
-                <td>{{ service.nom_service }}</td>
-                <td>{{ service.description }}</td>
-                <td>{{ service.nbr_employe }}</td>  <!-- Affiche le nombre d'employés -->
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-    {% else %}
-    <div class="message">
-        Aucun service trouvé.
-    </div>
-    {% endif %}
 
+    <!-- Formulaire de recherche -->
+    <div class="container">
+        <form method="GET" action="{% url 'rechercherService' %}">
+            <div class="row mb-3">
+                <div class="col-md-6">
+                    <input type="text" class="form-control" name="search" placeholder="Rechercher un service..." value="{{ request.GET.search }}">
+                </div>
+                <div class="col-md-3">
+                    <button type="submit" class="btn btn-primary">Rechercher</button>
+                </div>
+            </div>
+        </form>
+
+        <!-- Message d'erreur ou d'info -->
+        {% if message %}
+            <div class="alert alert-info">{{ message }}</div>
+        {% endif %}
+
+        <!-- Tableau des services -->
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Nom du Service</th>
+                    <th>Description</th>
+                    <th>Nombre d'Employés</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for service in services %}
+                    <tr>
+                        <td>{{ service.nom_service }}</td>
+                        <td>{{ service.description }}</td>
+                        <td>{{ service.nbr_employe }}</td> <!-- Affichage du nombre d'employés -->
+                        <td>
+                            <a href="{% url 'modifierService' service.id %}" class="btn btn-info btn-sm">Modifier</a>
+                            <a href="{% url 'supprimerService' service.id %}" class="btn btn-danger btn-sm">Supprimer</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Bouton d'ajout de service -->
+        <div class="text-center mt-4">
+            <a href="{% url 'ajouterService' %}" class="btn btn-custom btn-lg">Ajouter un service</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
 </body>
 </html>

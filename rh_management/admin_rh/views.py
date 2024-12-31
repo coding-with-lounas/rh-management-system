@@ -124,7 +124,7 @@ def afficherService(request):
     services= Service.objects.all()
     return render(request,'testservice.html',{'services':services})
 
- # Vue pour afficherun service avec le nombre d'employe 
+ # Vue pour afficher un service avec le nombre d'employe 
 def nbr_emp_par_service(request):
     emp=Service.objects.annotate(nbr_employe=Count('rel_emp'))
     
