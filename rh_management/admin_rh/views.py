@@ -1,5 +1,5 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Employe,Service,Absence
+from .models import Employe,Service,Absence,Massrouf
 from .forms import EmployeForm,ServiceForm,AbsenceForm 
 from django.contrib import messages
 from django.db.models import Q,Count
@@ -263,5 +263,27 @@ def rechercherAbsences(request):
             message = "Aucune absence ne correspond à votre recherche."
             return render(request, 'liste_absences.html', {'absences': Absence.objects.all(), 'message': message, 'search_mode': True})
     return render(request, 'liste_absences.html', {'absences': absences, 'search_mode': True})
+
+
+
+
+def demande_avance(request, employe_id):
+    employe = get_object_or_404(Employe, pk=employe_id)
+
+    if request.method == 'POST':
+        form = MassroufForm(request.POST)
+        if form.is_valid():
+            avance = form.save(commit=False)
+            avance.Employe = employe  
+            avance.save()
+
+            employe.somme_demandee_avance += float(avance.prix_avance)
+            employe.save()
+
+            return redirect('all_emp', employe_id=employe_id)  
+    else:
+        form = MassroufForm()
+
+    return render(request, 'demande_avance.html', {'form': form, 'employe': employe})
 
 
