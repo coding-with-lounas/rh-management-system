@@ -22,4 +22,7 @@ urlpatterns = [
     path('supprimer-absence/<int:pk>/', views.supprimerAbsence, name='supprimerAbsence'),
     path('absences/', views.afficherAbsences, name='listeAbsences'),
     path('absences/rechercher/', views.rechercherAbsences, name='rechercher_absences'),
+    #    Massrouf 
+    path('demande_massrouf/<int:employe_id>/', views.demande_massrouf, name='demande_massrouf'),
+    
 ]

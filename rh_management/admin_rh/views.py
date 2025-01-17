@@ -1,9 +1,9 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .models import Employe,Service,Absence,Massrouf
-from .forms import EmployeForm,ServiceForm,AbsenceForm 
+from .forms import EmployeForm,ServiceForm,AbsenceForm ,MassroufForm
 from django.contrib import messages
 from django.db.models import Q,Count
-
+from datetime import datetime
 
 # Create your views here.
 # Vue pour afficher un employe
@@ -267,23 +267,29 @@ def rechercherAbsences(request):
 
 
 
-def demande_avance(request, employe_id):
-    employe = get_object_or_404(Employe, pk=employe_id)
+
+def demande_massrouf(request, employe_id):
+    employe = get_object_or_404(Employe, pk=employe_id) 
+    current_year = datetime.now().year
+    demandes_massrouf = Massrouf.objects.filter(employe=employe, date_demande__year=current_year)
+    
+    if len(demandes_massrouf) >= 2:
+        # Si l'employé a déjà fait 2 demandes cette année, afficher un message d'erreur
+        messages.error(request, "Vous avez déjà demandé une avance deux fois cette année.")
+        return redirect('empList')  
 
     if request.method == 'POST':
         form = MassroufForm(request.POST)
         if form.is_valid():
             avance = form.save(commit=False)
-            avance.Employe = employe  
+            avance.employe = employe  # Associe l'employé automatiquement dans la vue
             avance.save()
 
-            employe.somme_demandee_avance += float(avance.prix_avance)
-            employe.save()
-
-            return redirect('all_emp', employe_id=employe_id)  
+            # Message de succès
+            messages.success(request, "Votre demande d'avance a été soumise avec succès.")
+            return redirect('empList')  
     else:
-        form = MassroufForm()
+      
+        form = MassroufForm(initial={'employe': employe})
 
-    return render(request, 'demande_avance.html', {'form': form, 'employe': employe})
-
-
+    return render(request, 'demande_massrouf.html', {'form': form, 'employe': employe})

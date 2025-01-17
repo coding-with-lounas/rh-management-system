@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demande d'Avance</title>
+    <!-- Lien vers Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+<div class="container mt-5">
+    <!-- Titre -->
+    <h2 class="text-center mb-4">Demande d'Avance</h2>
+
+    <!-- Informations de l'employé -->
+    <div class="card mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Informations de l'employé</h5>
+            <p class="mb-1"><strong>Nom :</strong> {{ employe.nom }}</p>
+            <p><strong>Prénom :</strong> {{ employe.prenom }}</p>
+        </div>
+    </div>
+
+    <!-- Formulaire -->
+    <form method="POST">
+        {% csrf_token %}
+        <!-- Champ Montant de l'avance -->
+        <div class="mb-3">
+            <label for="prix_avance" class="form-label">Montant de l'avance (en DA)</label>
+            <input type="number" name="prix_avance" id="prix_avance" class="form-control" placeholder="Entrez le montant" step="0.01" required>
+        </div>
+
+        <!-- Champ Justification -->
+        <div class="mb-3">
+            <label for="justification" class="form-label">Justification</label>
+            <textarea name="justification" id="justification" class="form-control" rows="4" placeholder="Expliquez brièvement votre demande" required></textarea>
+        </div>
+
+        <!-- Bouton Soumettre -->
+        <button type="submit" class="btn btn-primary w-100">Enregistrer</button>
+    </form>
+
+    <!-- Lien Retour -->
+    <div class="text-center mt-4">
+        <a href="{% url 'empList' %}" class="btn btn-secondary">Retour à la liste des employés</a>
+    </div>
+</div>
+
+<!-- Lien vers Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

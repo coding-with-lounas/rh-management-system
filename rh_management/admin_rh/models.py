@@ -23,7 +23,6 @@ class Employe(models.Model):
         return f'{self.prenom} {self.nom}'
     
 # class Salaire(models.Model):
-
 #     salaire_jour = models.DecimalField(max_digits=10, decimal_places=2)
 #     salaire_mois = models.DecimalField(max_digits=10, decimal_places=2)
 #     salaire_annual = models.DecimalField(max_digits=10, decimal_places=2)
@@ -33,8 +32,14 @@ class Massrouf(models.Model):
     prix_avance=models.DecimalField(max_digits=10, decimal_places=2)
     date_demande = models.DateField(auto_now_add=True)
     justification = models.TextField()
+    
+    def __str__(self):
+        return f"Avance : {self.prix_avance} DA - {self.date_demande}"
+    
 
-
+class Pointage(models.Model):
+    Employe = models.ForeignKey(Employe, on_delete=models.CASCADE)
+    compteur = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     
 class Absence(models.Model):
     employe=models.ForeignKey(Employe, on_delete=models.CASCADE,related_name="rel_abs")
@@ -48,10 +53,16 @@ class Contrat(models.Model):
     type_contrat = models.CharField(max_length=50)
     date_début = models.DateField()
     date_fin = models.DateField()
-    salaire_base = models.FloatField()
+    # salaire il faut etre la est en jour est auto remplit dans salaire classe
+    # salaire = models.ForeignKey("", on_delete=models.CASCADE)
+    employe = models.OneToOneField(Employe, on_delete=models.CASCADE,null=True, blank=True)
+    def clean(self):
+        if self.date_fin <= self.date_début:
+            raise ValidationError("La date de fin doit être postérieure à la date de début.")
 
     def __str__(self):
         return f"{self.type_contrat} ({self.date_début} - {self.date_fin})"
+
 
 
 class Congé(models.Model):
@@ -84,11 +95,11 @@ class Recrutement(models.Model):
         return f"Poste: {self.poste} ({self.statut})"
 
 
-class Candidat(models.Model):
-    nom = models.CharField(max_length=50)
-    prénom = models.CharField(max_length=50)
-    email = models.EmailField()
-    cv = models.FileField(upload_to='resumes/', null=True, blank=True)
+# class Candidat(models.Model):
+#     nom = models.CharField(max_length=50)
+#     prénom = models.CharField(max_length=50)
+#     email = models.EmailField()
+#     cv = models.FileField(upload_to='resumes/', null=True, blank=True)
 
-    def __str__(self):
-        return f"{self.nom} {self.prénom}"
+#     def __str__(self):
+#         return f"{self.nom} {self.prénom}"

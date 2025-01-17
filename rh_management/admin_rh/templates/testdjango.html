@@ -1,4 +1,4 @@
-<!DOCTYPE html> 
+<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -47,6 +47,13 @@
         }
         .btn-custom:hover {
             background-color: #218838;
+        }
+        .btn-advance {
+            background-color: #ffc107;
+            color: white;
+        }
+        .btn-advance:hover {
+            background-color: #e0a800;
         }
     </style>
 </head>
@@ -99,6 +106,11 @@
                         <td>
                             <a href="{% url 'editemp' x.id %}" class="btn btn-info btn-sm">Modifier</a>
                             <a href="{% url 'delemp' x.id %}" class="btn btn-danger btn-sm">Supprimer</a>
+                            
+                            <!-- Bouton de demande d'avance -->
+                            <a href="{% url 'demande_massrouf' x.id %}" class="btn btn-advance btn-sm">
+                                Demander une avance
+                            </a>
                         </td>
                     </tr>
                 {% endfor %}
