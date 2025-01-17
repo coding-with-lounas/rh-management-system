@@ -1,9 +1,10 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Employe,Service,Absence,Massrouf
+from .models import Employe,Service,Absence,Massrouf,Contrat,Salaire
 from .forms import EmployeForm,ServiceForm,AbsenceForm ,MassroufForm
 from django.contrib import messages
-from django.db.models import Q,Count
-from datetime import datetime
+from django.db.models import Q,Count,Sum
+from datetime import datetime,timedelta, date
+
 
 # Create your views here.
 # Vue pour afficher un employe
@@ -293,3 +294,67 @@ def demande_massrouf(request, employe_id):
         form = MassroufForm(initial={'employe': employe})
 
     return render(request, 'demande_massrouf.html', {'form': form, 'employe': employe})
+
+
+
+
+
+def calcul_salaire_mensuel():
+   
+    current_date = date.today()
+
+    # Parcourir tous les contrats actifs
+    contrats = Contrat.objects.filter(date_début__lte=current_date, date_fin__gte=current_date)
+
+    for contrat in contrats:
+        employe = contrat.employe
+        salaire_jour = contrat.salaireJrs
+
+        # Calculer le nombre total de jours dans le mois
+        first_day_of_month = date(current_date.year, current_date.month, 1)
+        last_day_of_month = (first_day_of_month + timedelta(days=31)).replace(day=1) - timedelta(days=1)
+        total_days = (last_day_of_month - first_day_of_month).days + 1
+
+        # Obtenir les jours d'absence dans le mois
+        absences = Absence.objects.filter(
+            employe=employe,
+            date_Absence__gte=first_day_of_month,
+            date_Absence__lte=last_day_of_month
+        ).count()
+
+        # Calculer le salaire brut pour le mois
+        jours_travailles = total_days - absences
+        salaire_mensuel = jours_travailles * salaire_jour
+
+        # Récupérer les montants d'avance (Massrouf) pour le mois en cours
+        massroufs = Massrouf.objects.filter(
+            employe=employe,
+            date_demande__year=current_date.year,
+            date_demande__month=current_date.month
+        ).aggregate(total_massrouf=Sum('montant'))['total_massrouf'] or 0
+
+        # Calculer le salaire final
+        salaire_final = salaire_mensuel - massroufs
+
+        # Enregistrer ou mettre à jour le salaire dans la classe Salaire
+        salaire, created = Salaire.objects.update_or_create(
+            employe=employe,
+            mois=current_date.strftime("%B"),
+            annee=current_date.year,
+            defaults={
+                'salaireMois': salaire_final,
+                'moisdetravail': current_date.month,
+                'Salaire_jr': contrat
+            }
+        )
+
+        print(f"Salaire calculé pour {employe.nom}: {salaire.salaireMois} DA (Absences: {absences}, Massrouf: {massroufs} DA)")
+ 
+
+
+def afficher_salaires(request):
+   
+    salaires = Salaire.objects.all().order_by('-annee', '-moisdetravail')  # Trie par année et mois (descendant)
+    
+    # Afficher dans un template
+    return render(request, 'afficher_salaires.html', {'salaires': salaires})

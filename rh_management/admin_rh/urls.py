@@ -24,5 +24,6 @@ urlpatterns = [
     path('absences/rechercher/', views.rechercherAbsences, name='rechercher_absences'),
     #    Massrouf 
     path('demande_massrouf/<int:employe_id>/', views.demande_massrouf, name='demande_massrouf'),
-    
+    path('salaires/', views.afficher_salaires, name='afficher_salaires'),
+
 ]

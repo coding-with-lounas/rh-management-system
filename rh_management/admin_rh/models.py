@@ -1,5 +1,6 @@
 from django.db import models
-
+from django.utils.timezone import now
+from django.core.exceptions import ValidationError
 
 class Service(models.Model):
     nom_service = models.CharField(max_length=50)
@@ -22,10 +23,18 @@ class Employe(models.Model):
     def __str__(self):
         return f'{self.prenom} {self.nom}'
     
-# class Salaire(models.Model):
-#     salaire_jour = models.DecimalField(max_digits=10, decimal_places=2)
-#     salaire_mois = models.DecimalField(max_digits=10, decimal_places=2)
-#     salaire_annual = models.DecimalField(max_digits=10, decimal_places=2)
+
+
+class Salaire(models.Model):
+    Salaire_jr = models.ForeignKey("Contrat", on_delete=models.CASCADE)
+    employe=models.ForeignKey("Employe", on_delete=models.CASCADE,related_name="sal_emp")
+    salaireMois = models.FloatField() 
+    moisdetravail = models.IntegerField()  
+    mois = models.CharField(max_length=10)  
+    annee = models.IntegerField(default=now().year)  
+
+    def __str__(self):
+        return f"Salaire : {self.salaireMois} DA - Mois : {self.mois} {self.annee}"
 
 class Massrouf(models.Model):
     employe = models.ForeignKey(Employe, on_delete=models.CASCADE)
@@ -49,19 +58,22 @@ class Absence(models.Model):
     def __str__(self):
         return f"{self.employe.nom} - {self.date_Absence}"
 
+
+
 class Contrat(models.Model):
     type_contrat = models.CharField(max_length=50)
     date_début = models.DateField()
     date_fin = models.DateField()
-    # salaire il faut etre la est en jour est auto remplit dans salaire classe
-    # salaire = models.ForeignKey("", on_delete=models.CASCADE)
-    employe = models.OneToOneField(Employe, on_delete=models.CASCADE,null=True, blank=True)
+    salaireJrs = models.FloatField()  
+    employe = models.OneToOneField("Employe", on_delete=models.CASCADE, null=True, blank=True)
+
     def clean(self):
-        if self.date_fin <= self.date_début:
+        if self.date_fin and self.date_début and self.date_fin <= self.date_début:
             raise ValidationError("La date de fin doit être postérieure à la date de début.")
 
     def __str__(self):
-        return f"{self.type_contrat} ({self.date_début} - {self.date_fin})"
+        return f"Contrat: {self.type_contrat}, Employé: {self.employe}, Durée: {self.date_début} - {self.date_fin}"
+
 
 
 
