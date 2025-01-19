@@ -19,11 +19,11 @@ Ce projet vise à développer une solution complète pour la gestion des ressour
 ## Technologies utilisées
 - **Django** : Framework web open-source en Python pour la gestion du backend.
 - **Django REST Framework** : API RESTful pour l’interaction avec le frontend.
-- **React** : Bibliothèque JavaScript pour la création de l'interface utilisateur dynamique.
-- **Chart.js** : Bibliothèque pour la génération de graphiques interactifs.
-- **Python** : Langage de programmation principal.
 - **Django ORM** : Système de gestion de base de données relationnelle.
+-  **Python** : Langage de programmation principal.
+-  **React** : Bibliothèque JavaScript pour la création de l'interface utilisateur dynamique.
 - **HTML/CSS/JavaScript** : Technologies de base pour la structuration et le style de la page.
+- **Chart.js** : Bibliothèque pour la génération de graphiques interactifs.
 - **Bootstrap** : Framework CSS pour une interface responsive.
 - **SQLite** : Base de données utilisée pour le stockage des données.
 - **Figma** : Outil de conception pour l'UI/UX.
