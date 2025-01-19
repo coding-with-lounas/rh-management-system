@@ -24,5 +24,6 @@ urlpatterns = [
     path('absences/rechercher/', views.rechercherAbsences, name='rechercher_absences'),
     #    Massrouf 
     path('demande_massrouf/<int:employe_id>/', views.demande_massrouf, name='demande_massrouf'),
-    path('salaire/', views.salaire, name='salaire'),
+    path('analyse-absences/', views.analyse_absences, name='analyse_absences'),
+    path('analyse-activite/', views.analyseActivite, name='analyseActivite'),
 ]

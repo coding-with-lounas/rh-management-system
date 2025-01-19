@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analyse des Absences</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style>
+        /* Couleurs et styles personnalisés */
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+        }
+        h1 {
+            margin-bottom: 30px;
+            color: #343a40;
+            text-align: center;
+            font-size: 2.5rem;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+        .table th {
+            background-color: #007bff;
+            color: white;
+        }
+        .btn-custom {
+            background-color: #28a745;
+            color: white;
+        }
+        .btn-custom:hover {
+            background-color: #218838;
+        }
+        .btn-advance {
+            background-color: #ffc107;
+            color: white;
+        }
+        .btn-advance:hover {
+            background-color: #e0a800;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Analyse des Absences par Mois</h1>
+        <canvas id="absenceChart" width="400" height="200"></canvas>
+        <div class="text-center mt-4">
+            <button class="btn btn-custom me-2">Télécharger le rapport</button>
+            <button class="btn btn-advance">Afficher les détails</button>
+        </div>
+    </div>
+
+    <script>
+        // Récupérer les données passées par Django
+        const data = {{ data|safe }}; // Assurez-vous que les données sont au format JSON
+        
+        // Créer le graphique avec Chart.js
+        const ctx = document.getElementById('absenceChart').getContext('2d');
+        new Chart(ctx, {
+            type: 'bar', // Type de graphique : barres
+            data: {
+                labels: data.labels, // Mois et années
+                datasets: [{
+                    label: "Nombre d'absences",
+                    data: data.data, // Total des absences
+                    backgroundColor: 'rgba(0, 123, 255, 0.5)', // Bleu
+                    borderColor: 'rgba(0, 123, 255, 1)', // Bordure bleu foncé
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    title: {
+                        display: true,
+                        text: 'Tendances des Absences par Mois',
+                        font: { size: 18 }
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(tooltipItem) {
+                                return `Absences : ${tooltipItem.raw}`;
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        title: {
+                            display: true,
+                            text: 'Mois et Année',
+                            color: '#343a40'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true,
+                        title: {
+                            display: true,
+                            text: "Nombre d'absences",
+                            color: '#343a40'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+
+    <!-- Bootstrap JS (optionnel) -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -7,6 +7,7 @@ from datetime import datetime,timedelta, date
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from dateutil.relativedelta import relativedelta 
+from django.db.models.functions import TruncMonth
 
 
 # Create your views here.
@@ -269,7 +270,122 @@ def rechercherAbsences(request):
     return render(request, 'liste_absences.html', {'absences': absences, 'search_mode': True})
 
 
+# View to display all contracts
+def afficherContrat(request):
+    contrats = Contrat.objects.all()
+    return render(request, 'contrats_list.html', {'Contrats': contrats})
 
+# View to add a new contract
+def ajouterContrat(request):
+    if request.method == 'POST':
+        form = ContratForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Le contrat a été ajouté avec succès.")
+            return redirect('contratList')  # Update with the correct URL name
+        else:
+            messages.error(request, "Erreur lors de l'ajout du contrat. Veuillez corriger les erreurs.")
+    else:
+        form = ContratForm()
+    return render(request, 'add_contrat.html', {'form': form})
+
+# View to edit a contract
+def modifierContrat(request, pk):
+    contrat = get_object_or_404(Contrat, id=pk)
+    if request.method == 'POST':
+        form = ContratForm(request.POST, instance=contrat)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Le contrat a été modifié avec succès.")
+            return redirect('contratList')
+        else:
+            messages.error(request, "Erreur lors de la modification du contrat.")
+    else:
+        form = ContratForm(instance=contrat)
+    return render(request, 'edit_contrat.html', {'form': form, 'contrat': contrat})
+
+# View to delete a contract
+def supprimerContrat(request, pk):
+    contrat = get_object_or_404(Contrat, id=pk)
+    if request.method == 'POST':
+        try:
+            contrat.delete()
+            messages.success(request, "Le contrat a été supprimé avec succès.")
+            return redirect('contratList')
+        except Exception as e:
+            messages.error(request, f"Erreur lors de la suppression du contrat: {str(e)}")
+    return render(request, 'delete_contrat.html', {'contrat': contrat})
+
+def rechercherContrat(request):
+    query = request.GET.get('search', '').strip()
+    if query:
+        contrats = Contrat.objects.filter(
+            Q(type_contrat__icontains=query) |
+            Q(employe__nom__icontains=query) |
+            Q(employe__prenom__icontains=query) |
+            Q(date_début__icontains=query) |
+            Q(date_fin__icontains=query)
+        )
+        if not contrats.exists():
+            messages.info(request, "Aucun contrat ne correspond à votre recherche.")
+        return render(request, 'contrats_list.html', {'Contrats': contrats, 'search_mode': True})
+    return render(request, 'contrats_list.html', {'Contrats': Contrat.objects.all(), 'message': "Veuillez entrer un terme de recherche."})
+
+
+def analyse_absences(request):
+    # Regrouper les absences par mois et compter les occurrences
+    absences_par_mois = (
+        Absence.objects.annotate(month=TruncMonth('date_Absence'))
+        .values('month')
+        .annotate(total=Count('id'))
+        .order_by('month')
+    )
+    
+    # Convertir les données en format utilisable par JavaScript dans le template
+    data = {
+        'labels': [item['month'].strftime('%Y-%m') for item in absences_par_mois],
+        'data': [item['total'] for item in absences_par_mois],
+    }
+    
+    # Rendre le template avec les données
+    return render(request, 'analyse_absences.html', {'data': data})
+
+def analyseActivite(request):
+    today = date.today()
+  
+    # Récupérer tous les employés
+    employees = Employe.objects.all()
+    
+    # Statistiques par Sexe
+    sexe_stats = employees.values('sexe').annotate(count=Count('id'))
+    sexe_counts = {'M': 0, 'F': 0}
+    for stat in sexe_stats:
+        sexe_counts[stat['sexe']] = stat['count']
+
+    # Calculer l'Age et l'Ancienneté
+    seniority_counts = {0: 0, 1: 0, 2: 0, 3: 0}  # Divise par année (0-1, 1-2, etc)
+    for emp in employees:
+        # Calcul de l'âge
+        age = today.year - emp.date_naissance.year - ((today.month, today.day) < (emp.date_naissance.month, emp.date_naissance.day))
+        
+        # Calcul de l'ancienneté
+        seniority = today.year - emp.date_embauche.year - ((today.month, today.day) < (emp.date_embauche.month, emp.date_embauche.day))
+        
+        # Classification de l'ancienneté
+        if seniority <= 1:
+            seniority_counts[0] += 1
+        elif seniority <= 2:
+            seniority_counts[1] += 1
+        elif seniority <= 3:
+            seniority_counts[2] += 1
+        else:
+            seniority_counts[3] += 1
+
+    # Rendre les données à la page pour Chart.js
+    return render(request, 'analyseActivite.html', {
+        'sexe_counts': sexe_counts,
+        'seniority_counts': seniority_counts,
+    })
 
 
 def demande_massrouf(request, employe_id):
