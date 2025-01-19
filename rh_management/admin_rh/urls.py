@@ -24,6 +24,18 @@ urlpatterns = [
     path('absences/rechercher/', views.rechercherAbsences, name='rechercher_absences'),
     #    Massrouf 
     path('demande_massrouf/<int:employe_id>/', views.demande_massrouf, name='demande_massrouf'),
+    # contrat 
+    path('contrats/', views.afficherContrat, name='contratList'),
+    path('contrats/add/', views.ajouterContrat, name='addContrat'),
+    path('contrats/edit/<int:pk>/', views.modifierContrat, name='editContrat'),
+    path('contrats/delete/<int:pk>/', views.supprimerContrat, name='deleteContrat'),
+    path('contrats/search/', views.rechercherContrat, name='searchContrat'),
+    # recrutemnnt
+    path('recrutements/', views.afficherRecrutements, name='listeRecrutements'), 
+    path('recrutement/ajouter/', views.ajouterRecrutement, name='ajouterRecrutement'), 
+    path('recrutement/editer/<int:pk>/', views.editerRecrutement, name='editerRecrutement'),  
+    path('recrutement/supprimer/<int:pk>/', views.supprimerRecrutement, name='supprimerRecrutement'),  
+    # analyse
     path('analyse-absences/', views.analyse_absences, name='analyse_absences'),
     path('analyse-activite/', views.analyseActivite, name='analyseActivite'),
 ]

@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
-from .models import Employe,Service,Absence,Massrouf,Contrat,Salaire
-from .forms import EmployeForm,ServiceForm,AbsenceForm ,MassroufForm
+from .models import Employe,Service,Absence,Massrouf,Contrat,Salaire,Recrutement
+from .forms import EmployeForm,ServiceForm,AbsenceForm ,MassroufForm,RecrutementForm 
 from django.contrib import messages
 from django.db.models import Q,Count,Sum
 from datetime import datetime,timedelta, date
@@ -269,6 +269,69 @@ def rechercherAbsences(request):
             return render(request, 'liste_absences.html', {'absences': Absence.objects.all(), 'message': message, 'search_mode': True})
     return render(request, 'liste_absences.html', {'absences': absences, 'search_mode': True})
 
+ 
+
+# Afficher la liste des recrutements
+def afficherRecrutements(request):
+    recrutements = Recrutement.objects.all()
+    return render(request, 'liste_recrutements.html', {'recrutements': recrutements, 'search_mode': False})
+
+# Ajouter un recrutement
+def ajouterRecrutement(request):
+    if request.method == 'POST':
+        form = RecrutementForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Le recrutement a été ajouté avec succès.")
+            return redirect('listeRecrutements')  # Redirige vers la liste des recrutements
+        else:
+            messages.error(request, "Erreur : Veuillez corriger les erreurs dans le formulaire.")
+    else:
+        form = RecrutementForm()
+    return render(request, 'ajouter_recrutement.html', {'form': form})
+
+# Modifier un recrutement
+def editerRecrutement(request, pk):
+    recrutement = get_object_or_404(Recrutement, pk=pk)
+    if request.method == 'POST':
+        form = RecrutementForm(request.POST, instance=recrutement)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Le recrutement a été modifié avec succès.")
+            return redirect('listeRecrutements')  # Redirige vers la liste des recrutements
+        else:
+            messages.error(request, "Erreur : Veuillez corriger les erreurs dans le formulaire.")
+    else:
+        form = RecrutementForm(instance=recrutement)
+    return render(request, 'editer_recrutement.html', {'form': form, 'recrutement': recrutement})
+
+def supprimerRecrutement(request, pk):
+    recrutement = get_object_or_404(Recrutement, pk=pk)
+    if request.method == 'POST':
+        try:
+            recrutement.delete()
+            messages.success(request, "Le recrutement a été supprimé avec succès.")
+        except Exception as e:
+            messages.error(request, f"Erreur lors de la suppression : {str(e)}")
+        return redirect('listeRecrutements')  # Redirige vers la liste des recrutements
+    return render(request, 'supprimer_recrutement.html', {'recrutement': recrutement})
+
+# Rechercher des recrutements
+def rechercherRecrutements(request):
+    query = request.GET.get('search', '')  # Récupère le terme de recherche
+    recrutements = Recrutement.objects.all()  # Récupère tous les recrutements par défaut
+
+    if query:  # Si un terme de recherche est présent
+        recrutements = recrutements.filter(
+            poste__icontains=query
+        ) | recrutements.filter(
+            statut__icontains=query
+        )
+        if not recrutements.exists():  # Si aucun résultat trouvé
+            message = "Aucun recrutement ne correspond à votre recherche."
+            return render(request, 'liste_recrutements.html', {'recrutements': Recrutement.objects.all(), 'message': message, 'search_mode': True})
+    
+    return render(request, 'liste_recrutements.html', {'recrutements': recrutements, 'search_mode': True})
 
 # View to display all contracts
 def afficherContrat(request):

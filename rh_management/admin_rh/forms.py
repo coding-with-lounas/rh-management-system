@@ -1,6 +1,6 @@
 from django.db.models import fields
 from django import forms
-from .models import Employe,Service,Absence,Massrouf
+from .models import Employe,Service,Absence,Massrouf,Recrutement
 
 class EmployeForm(forms.ModelForm):
     class Meta:
@@ -34,3 +34,9 @@ class MassroufForm(forms.ModelForm):
     class Meta:
         model = Massrouf
         fields = ['prix_avance', 'justification']
+      
+
+class RecrutementForm(forms.ModelForm):
+    class Meta:
+        model = Recrutement
+        fields = ['poste', 'date_publication', 'statut']
