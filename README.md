@@ -27,7 +27,7 @@ Ce projet vise à développer une solution complète pour la gestion des ressour
 - **Okba Khettab**
 - **Mohamed Amine Hadjou**
 - **Lounas Idjourdikene**
-- 
+  
 - **Dirigé par : Prof. Rachid Boudour**
 
 ## Fonctionnalités principales
