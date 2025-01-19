@@ -4,6 +4,9 @@ from .forms import EmployeForm,ServiceForm,AbsenceForm ,MassroufForm
 from django.contrib import messages
 from django.db.models import Q,Count,Sum
 from datetime import datetime,timedelta, date
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+from dateutil.relativedelta import relativedelta 
 
 
 # Create your views here.
@@ -295,10 +298,6 @@ def demande_massrouf(request, employe_id):
 
     return render(request, 'demande_massrouf.html', {'form': form, 'employe': employe})
 
-
-
-
-
 def calcul_salaire_mensuel():
    
     current_date = date.today()
@@ -349,7 +348,6 @@ def calcul_salaire_mensuel():
         )
 
         print(f"Salaire calculé pour {employe.nom}: {salaire.salaireMois} DA (Absences: {absences}, Massrouf: {massroufs} DA)")
- 
 
 
 def afficher_salaires(request):

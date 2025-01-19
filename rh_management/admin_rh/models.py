@@ -26,12 +26,12 @@ class Employe(models.Model):
 
 
 class Salaire(models.Model):
-    Salaire_jr = models.ForeignKey("Contrat", on_delete=models.CASCADE)
-    employe=models.ForeignKey("Employe", on_delete=models.CASCADE,related_name="sal_emp")
+    Salaire_jr = models.ForeignKey("Contrat", on_delete=models.CASCADE,)
+    employe = models.ForeignKey("Employe", on_delete=models.CASCADE, related_name="sal_emp")
     salaireMois = models.FloatField() 
     moisdetravail = models.IntegerField()  
-    mois = models.CharField(max_length=10)  
-    annee = models.IntegerField(default=now().year)  
+    mois = models.CharField(max_length=10) 
+    annee = models.IntegerField(default=now().year) 
 
     def __str__(self):
         return f"Salaire : {self.salaireMois} DA - Mois : {self.mois} {self.annee}"
@@ -46,9 +46,15 @@ class Massrouf(models.Model):
         return f"Avance : {self.prix_avance} DA - {self.date_demande}"
     
 
+
 class Pointage(models.Model):
-    Employe = models.ForeignKey(Employe, on_delete=models.CASCADE)
+    contrat = models.ForeignKey('Contrat', on_delete=models.CASCADE, null=True, blank=True)
+    employe = models.ForeignKey('Employe', on_delete=models.CASCADE)
     compteur = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+
+    def __str__(self):
+        return f"Pointage for {self.employe.nom}: {self.compteur} jours"
+
     
 class Absence(models.Model):
     employe=models.ForeignKey(Employe, on_delete=models.CASCADE,related_name="rel_abs")
@@ -64,8 +70,8 @@ class Contrat(models.Model):
     type_contrat = models.CharField(max_length=50)
     date_début = models.DateField()
     date_fin = models.DateField()
-    salaireJrs = models.FloatField()  
-    employe = models.OneToOneField("Employe", on_delete=models.CASCADE, null=True, blank=True)
+    salaireJrs = models.FloatField(null=True, blank=True)  
+    employe = models.ForeignKey("Employe", on_delete=models.CASCADE, null=True, blank=True) 
 
     def clean(self):
         if self.date_fin and self.date_début and self.date_fin <= self.date_début:
@@ -73,6 +79,7 @@ class Contrat(models.Model):
 
     def __str__(self):
         return f"Contrat: {self.type_contrat}, Employé: {self.employe}, Durée: {self.date_début} - {self.date_fin}"
+
 
 
 
