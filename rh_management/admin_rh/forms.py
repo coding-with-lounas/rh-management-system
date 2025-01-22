@@ -1,6 +1,6 @@
 from django.db.models import fields
 from django import forms
-from .models import Employe,Service,Absence,Massrouf,Recrutement
+from .models import Employe,Service,Absence,Massrouf,Recrutement,Contrat
 from django.contrib.auth.forms import UserCreationForm
   
 class EmployeForm(forms.ModelForm):
@@ -41,6 +41,18 @@ class RecrutementForm(forms.ModelForm):
     class Meta:
         model = Recrutement
         fields = ['poste', 'date_publication', 'statut']
+
+class ContratForm(forms.ModelForm):
+    class Meta:
+        model = Contrat
+        fields = ['type_contrat', 'employe', 'date_début', 'date_fin', 'salaireJrs']
+        widgets = {
+            'date_début': forms.DateInput(attrs={'type': 'date'}),
+            'date_fin': forms.DateInput(attrs={'type': 'date'}),
+        }
+
+class RechercheContratForm(forms.Form):
+    search = forms.CharField(max_length=100, required=False)
 
 
 

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrat de travail</title>
+</head>
+<body>
+    <h1>Contrat de travail</h1>
+    <p><strong>Nom de l'employé :</strong> {{ contrat.employe.nom }} {{ contrat.employe.prenom }}</p>
+    <p><strong>Type de contrat :</strong> {{ contrat.type_contrat }}</p>
+    <p><strong>Date de début :</strong> {{ contrat.date_début }}</p>
+    <p><strong>Date de fin :</strong> {{ contrat.date_fin }}</p>
+    <p><strong>Salaire par jour :</strong> {{ contrat.salaireJrs }}</p>
+</body>
+</html>

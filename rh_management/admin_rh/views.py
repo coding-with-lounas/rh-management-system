@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .models import Employe,Service,Absence,Massrouf,Contrat,Salaire,Recrutement
-from .forms import EmployeForm,ServiceForm,AbsenceForm ,MassroufForm,RecrutementForm,CustomUserCreationForm
+from .forms import EmployeForm,ServiceForm,AbsenceForm ,MassroufForm,RecrutementForm,CustomUserCreationForm,ContratForm,RechercheContratForm
 from django.contrib import messages
 from django.db.models import Q,Count,Sum
 from datetime import datetime,timedelta, date
@@ -12,6 +12,10 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
+from django.http import HttpResponse
+import io
+from django.template.loader import render_to_string
+from xhtml2pdf import pisa
 
 
 # Create your views here.
@@ -337,67 +341,93 @@ def rechercherRecrutements(request):
     
     return render(request, 'liste_recrutements.html', {'recrutements': recrutements, 'search_mode': True})
 
-# View to display all contracts
-def afficherContrat(request):
+# Liste des contrats avec recherche
+def liste_contrats(request):
     contrats = Contrat.objects.all()
-    return render(request, 'contrats_list.html', {'Contrats': contrats})
+    form = RechercheContratForm(request.GET)
+    
+    if form.is_valid():
+        search = form.cleaned_data.get('search')
+        if search:
+            contrats = contrats.filter(type_contrat__icontains=search)
+    
+    context = {
+        'Contrats': contrats,
+        'form': form,
+    }
+    return render(request, 'contrats_list.html', context)
 
-# View to add a new contract
-def ajouterContrat(request):
+# Ajouter un contrat
+def ajouter_contrat(request):
     if request.method == 'POST':
         form = ContratForm(request.POST)
         if form.is_valid():
             form.save()
-            messages.success(request, "Le contrat a été ajouté avec succès.")
-            return redirect('contratList')  # Update with the correct URL name
-        else:
-            messages.error(request, "Erreur lors de l'ajout du contrat. Veuillez corriger les erreurs.")
+            return redirect('contratList')  # redirige vers la liste des contrats
     else:
         form = ContratForm()
-    return render(request, 'add_contrat.html', {'form': form})
+    
+    context = {
+        'form': form
+    }
+    return render(request, 'add_contrat.html', context)
 
-# View to edit a contract
-def modifierContrat(request, pk):
-    contrat = get_object_or_404(Contrat, id=pk)
+# Modifier un contrat
+def modifier_contrat(request, contrat_id):
+    contrat = get_object_or_404(Contrat, id=contrat_id)
     if request.method == 'POST':
         form = ContratForm(request.POST, instance=contrat)
         if form.is_valid():
             form.save()
-            messages.success(request, "Le contrat a été modifié avec succès.")
             return redirect('contratList')
-        else:
-            messages.error(request, "Erreur lors de la modification du contrat.")
     else:
         form = ContratForm(instance=contrat)
-    return render(request, 'edit_contrat.html', {'form': form, 'contrat': contrat})
+    
+    context = {
+        'form': form,
+        'contrat': contrat
+    }
+    return render(request, 'edit_contrat.html', context)
 
-# View to delete a contract
-def supprimerContrat(request, pk):
-    contrat = get_object_or_404(Contrat, id=pk)
+# Supprimer un contrat
+def supprimer_contrat(request, contrat_id):
+    contrat = get_object_or_404(Contrat, id=contrat_id)
     if request.method == 'POST':
-        try:
-            contrat.delete()
-            messages.success(request, "Le contrat a été supprimé avec succès.")
-            return redirect('contratList')
-        except Exception as e:
-            messages.error(request, f"Erreur lors de la suppression du contrat: {str(e)}")
-    return render(request, 'delete_contrat.html', {'contrat': contrat})
+        contrat.delete()
+        return redirect('contratList')
+    
+    context = {
+        'contrat': contrat
+    }
+    return render(request, 'delete_contrat.html', context)
 
-def rechercherContrat(request):
-    query = request.GET.get('search', '').strip()
-    if query:
-        contrats = Contrat.objects.filter(
-            Q(type_contrat__icontains=query) |
-            Q(employe__nom__icontains=query) |
-            Q(employe__prenom__icontains=query) |
-            Q(date_début__icontains=query) |
-            Q(date_fin__icontains=query)
-        )
-        if not contrats.exists():
-            messages.info(request, "Aucun contrat ne correspond à votre recherche.")
-        return render(request, 'contrats_list.html', {'Contrats': contrats, 'search_mode': True})
-    return render(request, 'contrats_list.html', {'Contrats': Contrat.objects.all(), 'message': "Veuillez entrer un terme de recherche."})
-
+def imprimer_contrat(request, contrat_id):
+    # Récupérer le contrat à imprimer
+    contrat = Contrat.objects.get(id=contrat_id)
+    
+    # Créer un contexte de données à passer à votre template
+    context = {
+        'contrat': contrat,
+    }
+    
+    # Charger le template HTML pour le contrat
+    template = 'contrat_template.html'  # Votre template HTML pour le contrat
+    
+    # Rendre le template avec le contexte
+    html_content = render_to_string(template, context)
+    
+    # Créer une réponse HTTP avec le contenu PDF
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="contrat_{contrat.id}.pdf"'
+    
+    # Utiliser xhtml2pdf pour convertir le HTML en PDF
+    pisa_status = pisa.CreatePDF(html_content, dest=response)
+    
+    # Vérifier si le PDF a été créé avec succès
+    if pisa_status.err:
+        return HttpResponse('Erreur lors de la génération du PDF', status=500)
+    
+    return response
 
 def analyse_absences(request):
     # Regrouper les absences par mois et compter les occurrences

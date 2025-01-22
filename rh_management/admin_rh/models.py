@@ -68,11 +68,12 @@ class Absence(models.Model):
 
 
 class Contrat(models.Model):
+    employe = models.ForeignKey("Employe", on_delete=models.CASCADE, null=True, blank=True) 
     type_contrat = models.CharField(max_length=50)
     date_début = models.DateField()
     date_fin = models.DateField()
     salaireJrs = models.FloatField(null=True, blank=True)  
-    employe = models.ForeignKey("Employe", on_delete=models.CASCADE, null=True, blank=True) 
+   
 
     def clean(self):
         if self.date_fin and self.date_début and self.date_fin <= self.date_début:

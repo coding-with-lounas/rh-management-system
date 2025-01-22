@@ -25,11 +25,11 @@ urlpatterns = [
     #    Massrouf 
     path('demande_massrouf/<int:employe_id>/', views.demande_massrouf, name='demande_massrouf'),
     # contrat 
-    path('contrats/', views.afficherContrat, name='contratList'),
-    path('contrats/add/', views.ajouterContrat, name='addContrat'),
-    path('contrats/edit/<int:pk>/', views.modifierContrat, name='editContrat'),
-    path('contrats/delete/<int:pk>/', views.supprimerContrat, name='deleteContrat'),
-    path('contrats/search/', views.rechercherContrat, name='searchContrat'),
+    path('contrat/', views.liste_contrats, name='contratList'),
+    path('ajoutercontrat/', views.ajouter_contrat, name='ajouterContrat'),
+    path('modifiercontrat/<int:contrat_id>/', views.modifier_contrat, name='modifierContrat'),
+    path('supprimercontrat/<int:contrat_id>/', views.supprimer_contrat, name='supprimerContrat'),
+    path('imprimer_contrat/<int:contrat_id>/', views.imprimer_contrat, name='imprimerContrat'), 
     # recrutemnnt
     path('recrutements/', views.afficherRecrutements, name='listeRecrutements'), 
     path('recrutement/ajouter/', views.ajouterRecrutement, name='ajouterRecrutement'), 
@@ -39,7 +39,7 @@ urlpatterns = [
     path('analyse-absences/', views.analyse_absences, name='analyse_absences'),
     path('analyse-activite/', views.analyseActivite, name='analyseActivite'),
     # Authentification
-    path('', views.inscription, name='inscription'),
+    # path('', views.inscription, name='inscription'),
     path('connexion/', views.connexion, name='connexion'),
     path('acceuil/', views.acceuil, name='acceuil'),
     path('deconnexion/', views.deconnexion, name='deconnexion'),
