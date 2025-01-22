@@ -2,6 +2,7 @@ from django.db import models
 from django.utils.timezone import now
 from django.core.exceptions import ValidationError
 
+
 class Service(models.Model):
     nom_service = models.CharField(max_length=50)
     description = models.CharField(max_length=50)
@@ -47,13 +48,13 @@ class Massrouf(models.Model):
     
 
 
-class Pointage(models.Model):
-    contrat = models.ForeignKey('Contrat', on_delete=models.CASCADE, null=True, blank=True)
-    employe = models.ForeignKey('Employe', on_delete=models.CASCADE)
-    compteur = models.DecimalField(max_digits=10, decimal_places=2, default=0)
+# class Pointage(models.Model):
+#     contrat = models.ForeignKey('Contrat', on_delete=models.CASCADE, null=True, blank=True)
+#     employe = models.ForeignKey('Employe', on_delete=models.CASCADE)
+#     compteur = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
-    def __str__(self):
-        return f"Pointage for {self.employe.nom}: {self.compteur} jours"
+#     def __str__(self):
+#         return f"Pointage for {self.employe.nom}: {self.compteur} jours"
 
     
 class Absence(models.Model):
@@ -85,6 +86,7 @@ class Contrat(models.Model):
 
 
 class Congé(models.Model):
+    employe = models.ForeignKey(Employe, on_delete=models.CASCADE, related_name="conge_emp", null=True, blank=True)
     type_congé = models.CharField(max_length=30)
     date_début = models.DateField()
     date_fin = models.DateField()

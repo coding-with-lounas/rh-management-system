@@ -38,4 +38,9 @@ urlpatterns = [
     # analyse
     path('analyse-absences/', views.analyse_absences, name='analyse_absences'),
     path('analyse-activite/', views.analyseActivite, name='analyseActivite'),
+    # Authentification
+    path('', views.inscription, name='inscription'),
+    path('connexion/', views.connexion, name='connexion'),
+    path('acceuil/', views.acceuil, name='acceuil'),
+    path('deconnexion/', views.deconnexion, name='deconnexion'),
 ]

@@ -1,6 +1,6 @@
 from django.shortcuts import render,redirect,get_object_or_404
 from .models import Employe,Service,Absence,Massrouf,Contrat,Salaire,Recrutement
-from .forms import EmployeForm,ServiceForm,AbsenceForm ,MassroufForm,RecrutementForm 
+from .forms import EmployeForm,ServiceForm,AbsenceForm ,MassroufForm,RecrutementForm,CustomUserCreationForm
 from django.contrib import messages
 from django.db.models import Q,Count,Sum
 from datetime import datetime,timedelta, date
@@ -8,6 +8,10 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from dateutil.relativedelta import relativedelta 
 from django.db.models.functions import TruncMonth
+from django.contrib.auth.forms import UserCreationForm 
+from django.contrib.auth import login, authenticate, logout
+from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
 
 # Create your views here.
@@ -535,3 +539,37 @@ def afficher_salaires(request):
     
     # Afficher dans un template
     return render(request, 'afficher_salaires.html', {'salaires': salaires})
+
+
+
+
+# Create your views here.
+def inscription(request):
+    if request.method == 'POST':
+        form = CustomUserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('connexion')
+    else:
+        form = CustomUserCreationForm()
+    return render(request, 'inscription.html', {'form': form})
+
+def connexion(request):
+    if request.method == 'POST':
+        username = request.POST['username']
+        password = request.POST['password']
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('empList')
+        else:
+            messages.error(request, 'Nom d\'utilisateur ou mot de passe incorrect.')
+    return render(request, 'connexion.html')
+
+@login_required
+def acceuil(request):
+    return render(request, 'acceuil.html')
+
+def deconnexion(request):
+    logout(request)
+    return redirect('connexion')
