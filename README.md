@@ -37,7 +37,9 @@ Ce projet vise à développer une solution complète pour la gestion des ressour
 - **Gestion des Salaires** : Calcul et gestion des salaires en fonction des congés et autres critères.
 - **Gestion de Projets** : Outils de gestion de tâches et de projets via des tableaux Kanban.
 - **Gestion du Recrutement** : Suivi des candidatures et gestion des processus de recrutement.
-
+- **Gestion du Candidate**
+- **Gestion du Contrat**
+- **Gestion **
 ## Différences avec les systèmes existants
 Notre solution se distingue des autres outils comme KiwiHR, Trello ou Lucca en offrant :
 - Une **intégration fluide** avec des outils tiers.
