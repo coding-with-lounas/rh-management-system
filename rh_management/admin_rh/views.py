@@ -411,7 +411,7 @@ def imprimer_contrat(request, contrat_id):
     }
     
     # Charger le template HTML pour le contrat
-    template = 'contrat_template.html'  # Votre template HTML pour le contrat
+    template = 'contrat_template.html'  
     
     # Rendre le template avec le contexte
     html_content = render_to_string(template, context)
