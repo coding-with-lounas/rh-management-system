@@ -23,6 +23,7 @@ Ce projet vise à développer une solution complète pour la gestion des ressour
 - **SQLite** : Base de données utilisée pour le stockage des données.
 - **Figma** : Outil de conception pour l'UI/UX.
 
+
 ## Membres du projet
 - **Okba Khettab**
 - **Mohamed Amine Hadjou**
@@ -40,6 +41,8 @@ Ce projet vise à développer une solution complète pour la gestion des ressour
 - **Gestion du Candidate**
 - **Gestion du Contrat**
 - **Gestion **
+
+  
 ## Différences avec les systèmes existants
 Notre solution se distingue des autres outils comme KiwiHR, Trello ou Lucca en offrant :
 - Une **intégration fluide** avec des outils tiers.
