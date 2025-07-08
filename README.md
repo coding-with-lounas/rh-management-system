@@ -4,6 +4,7 @@
 Ce projet vise à développer une solution complète pour la gestion des ressources humaines et la collaboration en entreprise. Il comprend des fonctionnalités avancées telles que la gestion des absences, des congés, des évaluations, des salaires, ainsi que des outils de gestion de projets et de tâches. Ce système est conçu pour répondre aux besoins des départements RH modernes tout en permettant une collaboration fluide entre les équipes.
 
 ## Critères de succès
+
 - Fonctionnalités complètes et opérationnelles
 - Interface utilisateur intuitive
 - Performance et stabilité du système
