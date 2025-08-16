@@ -18,6 +18,10 @@ from django.template.loader import render_to_string
 from xhtml2pdf import pisa
 
 
+def dashboard(request):
+    return render(request, 'dashboard.html')
+
+
 # Create your views here.
 # Vue pour afficher un employe
 

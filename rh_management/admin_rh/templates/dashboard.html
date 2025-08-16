@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord - Système RH</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .dashboard-container {
+            padding: 2rem 0;
+        }
+        .section-card {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        .section-card:hover {
+            transform: translateY(-5px);
+        }
+        .section-header {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            color: white;
+            padding: 1.5rem;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+        .section-header.manager {
+            background: linear-gradient(45deg, #2196F3, #1976D2);
+        }
+        .section-header.candidat {
+            background: linear-gradient(45deg, #FF9800, #F57C00);
+        }
+        .section-header.admin {
+            background: linear-gradient(45deg, #9C27B0, #7B1FA2);
+        }
+        .btn-custom {
+            margin: 0.3rem;
+            padding: 0.8rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-custom:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+        .btn-primary-custom {
+            background: linear-gradient(45deg, #007bff, #0056b3);
+            color: white;
+        }
+        .btn-success-custom {
+            background: linear-gradient(45deg, #28a745, #1e7e34);
+            color: white;
+        }
+        .btn-warning-custom {
+            background: linear-gradient(45deg, #ffc107, #d39e00);
+            color: black;
+        }
+        .btn-danger-custom {
+            background: linear-gradient(45deg, #dc3545, #c82333);
+            color: white;
+        }
+        .btn-info-custom {
+            background: linear-gradient(45deg, #17a2b8, #138496);
+            color: white;
+        }
+        .btn-secondary-custom {
+            background: linear-gradient(45deg, #6c757d, #545b62);
+            color: white;
+        }
+        .main-title {
+            color: white;
+            text-align: center;
+            margin-bottom: 3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+        .section-body {
+            padding: 1.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container dashboard-container">
+        <h1 class="main-title display-4">
+            <i class="fas fa-building"></i>
+            Système de Gestion RH
+        </h1>
+
+        <!-- Section Manager/Admin RH -->
+        <div class="section-card">
+            <div class="section-header admin">
+                <i class="fas fa-users-cog"></i>
+                Administration RH
+            </div>
+            <div class="section-body">
+                <h5 class="mb-3">Authentification</h5>
+                <a href="/connexion/" class="btn btn-primary-custom btn-custom">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Connexion
+                </a>
+                <a href="/" class="btn btn-success-custom btn-custom">
+                    <i class="fas fa-user-plus"></i>
+                    Inscription
+                </a>
+                <!-- <a href="/acceuil/" class="btn btn-info-custom btn-custom">
+                    <i class="fas fa-home"></i>
+                    Accueil
+                </a> -->
+                <a href="/deconnexion/" class="btn btn-secondary-custom btn-custom">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Déconnexion
+                </a>
+
+                <hr class="my-4">
+
+                <h5 class="mb-3">Gestion des Employés</h5>
+                <a href="/employe/" class="btn btn-primary-custom btn-custom">
+                    <i class="fas fa-list"></i>
+                    Liste Employés
+                </a>
+                <a href="/employe/ajouterEmploye/" class="btn btn-success-custom btn-custom">
+                    <i class="fas fa-user-plus"></i>
+                    Ajouter Employé
+                </a>
+                <!-- <a href="/employe/rechercher" class="btn btn-info-custom btn-custom">
+                    <i class="fas fa-search"></i>
+                    Rechercher Employé
+                </a> -->
+
+                <hr class="my-4">
+
+                <h5 class="mb-3">Gestion des Services</h5>
+                <a href="/services/" class="btn btn-primary-custom btn-custom">
+                    <i class="fas fa-building"></i>
+                    Liste Services
+                </a>
+                <a href="/service/ajouter/" class="btn btn-success-custom btn-custom">
+                    <i class="fas fa-plus"></i>
+                    Ajouter Service
+                </a>
+                <!-- <a href="/services/recherche/" class="btn btn-info-custom btn-custom">
+                    <i class="fas fa-search"></i>
+                    Rechercher Service
+                </a> -->
+
+                <hr class="my-4">
+
+                <h5 class="mb-3">Gestion des Absences</h5>
+                <a href="/absences/" class="btn btn-primary-custom btn-custom">
+                    <i class="fas fa-calendar-times"></i>
+                    Liste Absences
+                </a>
+                <a href="/ajouter-absence/" class="btn btn-success-custom btn-custom">
+                    <i class="fas fa-plus"></i>
+                    Ajouter Absence
+                </a>
+                <!-- <a href="/absences/rechercher/" class="btn btn-info-custom btn-custom">
+                    <i class="fas fa-search"></i>
+                    Rechercher Absences
+                </a> -->
+
+                <hr class="my-4">
+
+                <h5 class="mb-3">Gestion des Contrats</h5>
+                <a href="/contrat/" class="btn btn-primary-custom btn-custom">
+                    <i class="fas fa-file-contract"></i>
+                    Liste Contrats
+                </a>
+                <a href="/ajoutercontrat/" class="btn btn-success-custom btn-custom">
+                    <i class="fas fa-plus"></i>
+                    Ajouter Contrat
+                </a>
+
+                <hr class="my-4">
+
+                <h5 class="mb-3">Recrutement</h5>
+                <a href="/recrutements/" class="btn btn-primary-custom btn-custom">
+                    <i class="fas fa-users"></i>
+                    Liste Recrutements
+                </a>
+                <a href="/recrutement/ajouter/" class="btn btn-success-custom btn-custom">
+                    <i class="fas fa-plus"></i>
+                    Ajouter Recrutement
+                </a>
+
+                <hr class="my-4">
+
+                <h5 class="mb-3">Analyses & Rapports</h5>
+                <a href="/analyse-absences/" class="btn btn-warning-custom btn-custom">
+                    <i class="fas fa-chart-bar"></i>
+                    Analyse Absences
+                </a>
+                <a href="/analyse-activite/" class="btn btn-warning-custom btn-custom">
+                    <i class="fas fa-chart-line"></i>
+                    Analyse Activité
+                </a>
+            </div>
+        </div>
+
+        <!-- Section Manager -->
+        <div class="section-card">
+            <div class="section-header manager">
+                <i class="fas fa-user-tie"></i>
+                Espace Manager
+            </div>
+            <div class="section-body">
+                <a href="/evaluation" class="btn btn-primary-custom btn-custom">
+                    <i class="fas fa-star"></i>
+                    Créer Évaluation
+                </a>
+                <a href="/evaluation/success/" class="btn btn-success-custom btn-custom">
+                    <i class="fas fa-check-circle"></i>
+                    Évaluation Réussie
+                </a>
+            </div>
+        </div>
+
+        <!-- Section Candidat -->
+        <div class="section-card">
+            <div class="section-header candidat">
+                <i class="fas fa-user"></i>
+                Espace Candidat
+            </div>
+            <div class="section-body">
+                <a href="/candidature/" class="btn btn-primary-custom btn-custom">
+                    <i class="fas fa-file-alt"></i>
+                    Postuler
+                </a>
+                <a href="/candidature/success/" class="btn btn-success-custom btn-custom">
+                    <i class="fas fa-check-circle"></i>
+                    Candidature Envoyée
+                </a>
+            </div>
+        </div>
+
+        <!-- Section Admin Django -->
+        <div class="section-card">
+            <div class="section-header">
+                <i class="fas fa-cog"></i>
+                Administration Django
+            </div>
+            <div class="section-body">
+                <a href="/admin/" class="btn btn-danger-custom btn-custom">
+                    <i class="fas fa-tools"></i>
+                    Admin Django
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
